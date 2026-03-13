@@ -1,0 +1,26 @@
+{
+  "name": "Chulina — Tortillas de Harina",
+  "short_name": "Chulina",
+  "description": "Pide tus tortillas artesanales de harina. La receta que no se olvidó.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#5C3D8F",
+  "theme_color": "#5C3D8F",
+  "lang": "es-MX",
+  "categories": ["food", "shopping"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
