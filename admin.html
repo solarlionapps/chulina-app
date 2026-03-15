@@ -139,20 +139,24 @@ window.toggleEmail = function() {
 };
 
 // Google login
-window.loginGoogle = function() {
+  window.loginGoogle = async function () {
+
   setLoading(true);
+
+  const provider = new GoogleAuthProvider();
+
   try {
-    var result = await signInWithPopup(auth, provider);
-    if (!ADMIN_EMAILS.includes(result.user.email)) {
-      await signOut(auth);
-      setLoading(false);
-      showErr("Acceso denegado. Este email no es administrador.");
-    }
-  } catch(e) {
-    setLoading(false);
-    if (e.code !== "auth/popup-closed-by-user") showErr("Error con Google. Intenta de nuevo.");
+
+    const result = await signInWithPopup(auth, provider);
+    console.log("Usuario:", result.user);
+
+  } catch (error) {
+
+    console.error("Error login:", error);
+
   }
-};
+
+}                   
 
 // Email login
 window.loginEmailFn = async function() {
@@ -301,7 +305,7 @@ function renderPedidos() {
 }
 
 // Change status
-window.cambiarEstado = function(id, estado) {
+window.cambiarEstado = async function(id, estado) {
   try {
     await updateDoc(doc(db,"pedidos",id), {estado:estado});
     showToast("Actualizado: " + estado);
