@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chulina-v9';
+const CACHE_NAME = 'chulina-v12';
 const ASSETS = [
   '/chulina-app/',
   '/chulina-app/index.html',

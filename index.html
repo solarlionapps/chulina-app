@@ -284,7 +284,7 @@ html,body{height:100%;background:#EDE8F5;font-family:'Nunito',sans-serif;}
  <div class="how-card">
   <h3>&#128204; C&#243;mo hacer tu pedido</h3>
   <div class="how-step"><div class="how-num">1</div>   <div class="how-txt">Elige tus tortillas en el <strong>Men&#250;</strong> y ag&#233;galas al carrito</div></div>
-  <div class="how-step"><div class="how-num">2</div>   <div class="how-txt">Los pedidos se realizan con <strong>m&#237;nimo 3 d&#237;as de anticipaci&#243;n</strong>. Elige: <strong>Domicilio</strong> (+$20, m&#237;n. $70) &bull; <strong>Recoger</strong> &bull; <strong>Programar fecha</strong></div></div>
+  <div class="how-step"><div class="how-num">2</div>   <div class="how-txt">Elige <strong>Domicilio</strong> (+$20, m&#237;n. $70) o <strong>Recoger en tienda</strong> y selecciona fecha &mdash; <strong>m&#237;nimo 3 d&#237;as de anticipaci&#243;n</strong></div></div>
   <div class="how-step"><div class="how-num">3</div>   <div class="how-txt">Selecciona tu <strong>forma de pago</strong> y confirma</div></div>
   <div class="how-step"><div class="how-num">4</div>   <div class="how-txt">Recibe confirmaci&#243;n por <strong>WhatsApp</strong> &#128172;</div></div>
  </div>
@@ -354,13 +354,14 @@ html,body{height:100%;background:#EDE8F5;font-family:'Nunito',sans-serif;}
   <button class="copy-btn" onclick="copyPaypal()">&#128203; Copiar usuario de PayPal</button>
   <p class="info-note">Env&#237;a tu comprobante por WhatsApp al <strong>33 1133 1128</strong>.</p>
  </div>
+ <div style="margin:10px 14px 0;background:var(--w);border-radius:16px;border:.5px solid var(--borde);padding:14px;"><div style="font-family:'Playfair Display',serif;font-size:14px;color:var(--cafe);margin-bottom:4px;">&#128100; Tus datos</div><div style="font-size:11px;color:var(--gris);margin-bottom:12px;line-height:1.5;">Tus datos solo se usar&#225;n para confirmar tu pedido. No compartimos tu informaci&#243;n.</div><div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--gris);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;">Nombre *</div><input id="clienteNombre" type="text" placeholder="Tu nombre" style="width:100%;border:1.5px solid var(--borde);border-radius:10px;padding:11px 13px;font-size:14px;font-family:'Nunito',sans-serif;color:var(--cafe);background:var(--mbg);outline:none;box-sizing:border-box;"/></div><div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--gris);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;">Tel&#233;fono (10 d&#237;gitos) *</div><input id="clienteTel" type="tel" placeholder="3311331128" maxlength="10" style="width:100%;border:1.5px solid var(--borde);border-radius:10px;padding:11px 13px;font-size:14px;font-family:'Nunito',sans-serif;color:var(--cafe);background:var(--mbg);outline:none;box-sizing:border-box;"/></div><div id="camposDomicilio" style="display:none;"><div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--gris);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;">Direcci&#243;n de entrega *</div><input id="clienteDireccion" type="text" placeholder="Calle, n&#250;m., colonia, referencias..." style="width:100%;border:1.5px solid var(--borde);border-radius:10px;padding:11px 13px;font-size:14px;font-family:'Nunito',sans-serif;color:var(--cafe);background:var(--mbg);outline:none;box-sizing:border-box;"/></div></div><div><div style="font-size:10px;color:var(--gris);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;">Notas del pedido <span style="font-weight:400;text-transform:none;font-size:10px;">(opcional)</span></div><textarea id="clienteNotas" placeholder="Ej: alergias, instrucciones especiales..." style="width:100%;border:1.5px solid var(--borde);border-radius:10px;padding:11px 13px;font-size:14px;font-family:'Nunito',sans-serif;color:var(--cafe);background:var(--mbg);outline:none;box-sizing:border-box;resize:none;height:68px;"></textarea></div></div>
  <button class="confirm-btn" onclick="confirmarPedido()">&#10003; Confirmar y enviar pedido</button>
- <div class="seguro">Recibir&#225;s confirmaci&#243;n por WhatsApp</div>
+ <div class="seguro">Tu pedido se guarda autom&#225;ticamente &#128274;</div>
  <div style="height:16px"></div>
 </div></div>
 <div class="screen" id="screen-exito"><div class="exito-wrap">
  <div class="exito-icon">&#127881;</div>
- <div class="exito-title">&#161;Pedido enviado!</div>
+ <div class="exito-title" id="exitoTitle">&#161;Pedido enviado!</div>
  <div class="exito-sub">Gracias por elegir Chulina.<br/>Tus tortillas est&#225;n en camino.</div>
  <div class="exito-folio" id="exitoFolio">Folio: CHU-XXXX</div>
  <div class="exito-fecha" id="exitoFecha"></div>
@@ -395,8 +396,7 @@ var ENVIO_MINIMO = 70;
 
 var delivOpts = [
   {id:"domicilio", label:"Entrega a domicilio", sub:"+ $20 MXN &bull; Compra m\u00EDnima $70 MXN"},
-  {id:"recoger",   label:"Recoger en tienda",   sub:"Sin costo de env\u00EDo"},
-  {id:"programar", label:"Programar pedido",     sub:"M\u00EDnimo 3 d\u00EDas de anticipaci\u00F3n"}
+  {id:"recoger",   label:"Recoger en tienda",   sub:"Sin costo de env\u00EDo"}
 ];
 
 var cart = {};
@@ -539,19 +539,19 @@ function renderCart() {
       + "</div>";
   });
 
-  /* Step 2 — fecha (only programar) */
+  /* Step 2 — fecha (always shown once delivery is selected) */
   var minDate = new Date(); minDate.setDate(minDate.getDate()+3);
   var minStr  = minDate.toISOString().split("T")[0];
   var fSection = "";
-  if (selDelivery==="programar") {
+  if (selDelivery) {
     var fCls = "fecha-note" + (fechaLabel?" fecha-ok":"");
     var fTxt = fechaLabel
       ? "&#10003; Entrega: <strong>" + fechaLabel + "</strong>"
-      : "Selecciona cu\u00E1ndo quieres tus tortillas";
+      : "Selecciona la fecha de entrega (a partir del 4º día)";
     fSection =
       "<div class=\"step-card\">"
       + "<div class=\"step-hdr\"><span class=\"step-num\">2</span>"
-        + " &#128197; Fecha &mdash; <span class=\"fecha-badge\">M\u00EDn. 3 d\u00EDas</span>"
+        + " &#128197; Fecha de entrega &mdash; <span class=\"fecha-badge\">M\u00EDn. 3 d\u00EDas</span>"
       + "</div>"
       + "<input class=\"fecha-input\" type=\"date\" id=\"fechaInput\""
         + " min=\"" + minStr + "\" value=\"" + fechaSeleccionada + "\""
@@ -561,7 +561,7 @@ function renderCart() {
   }
 
   /* Step 3/2 — items */
-  var stepN = selDelivery==="programar" ? "3" : "2";
+  var stepN = selDelivery ? "3" : "2";
   var iHtml = "";
   items.forEach(function(p) {
     iHtml +=
@@ -646,7 +646,7 @@ function selDeliveryOpt(id) { selDelivery=id; renderCart(); }
 function updateFecha(input) {
   var val=input.value, nota=document.getElementById("fechaNota");
   if (!val) {
-    nota.innerHTML="Selecciona cu\u00E1ndo quieres tus tortillas";
+    nota.innerHTML="Selecciona la fecha de entrega (a partir del 4º día)";
     nota.className="fecha-note"; fechaSeleccionada=""; fechaLabel=""; return;
   }
   var sel=new Date(val+"T12:00:00"), hoy=new Date(); hoy.setHours(0,0,0,0);
@@ -683,6 +683,8 @@ function renderPago() {
   document.getElementById("pagoTotal").textContent   = "$"+t+" MXN";
   document.getElementById("transfMonto").textContent = "$"+t+" MXN";
   document.getElementById("paypalMonto").textContent = "$"+t+" MXN";
+  var cd = document.getElementById("camposDomicilio");
+  if (cd) cd.style.display = selDelivery==="domicilio" ? "block" : "none";
   var fr=document.getElementById("pagoFechaRow");
   if (fechaLabel) {
     document.getElementById("pagoFechaLabel").textContent="Entrega: "+fechaLabel;
@@ -709,19 +711,53 @@ function copyPaypal() {
   if (navigator.clipboard) navigator.clipboard.writeText(u).then(function(){alert("Copiado: "+u);}).catch(function(){alert(u);});
   else alert(u);
 }
+var clienteNombreVal = "";
+var folioGuardado    = "";
+
 function confirmarPedido() {
-  cartSnapshot=products.filter(function(p){return cart[p.id]>0;})
-    .map(function(p){return {name:p.name,desc:p.desc,price:p.price,qty:cart[p.id]};});
+  var nombre    = document.getElementById("clienteNombre")    ? document.getElementById("clienteNombre").value.trim()    : "";
+  var tel       = document.getElementById("clienteTel")       ? document.getElementById("clienteTel").value.trim()       : "";
+  var direccion = document.getElementById("clienteDireccion") ? document.getElementById("clienteDireccion").value.trim() : "";
+  var notas     = document.getElementById("clienteNotas")     ? document.getElementById("clienteNotas").value.trim()     : "";
+  if (!nombre) { alert("Por favor ingresa tu nombre."); return; }
+  if (!tel || tel.replace(/[^0-9]/g,"").length < 10) { alert("Ingresa tu teléfono de 10 dígitos."); return; }
+  if (selDelivery==="domicilio" && !direccion) { alert("Ingresa tu dirección de entrega."); return; }
+  cartSnapshot = products.filter(function(p){return cart[p.id]>0;})
+    .map(function(p){return {name:p.name,desc:p.desc,price:p.price,qty:cart[p.id],total:p.price*cart[p.id]};});
+  clienteNombreVal = nombre;
+  guardarPedido(nombre, tel, direccion, notas);
+}
+
+async function guardarPedido(nombre, tel, direccion, notas) {
+  var folio = "CHU-"+Math.floor(Math.random()*9000+1000);
+  var dLabel = "Sin especificar";
+  for (var i=0;i<delivOpts.length;i++){if(delivOpts[i].id===selDelivery){dLabel=delivOpts[i].label;break;}}
+  var mL = {wa:"Efectivo al entregar",transf:"Transferencia SPIN OXXO",paypal:"PayPal @perlaml888"};
+  var sub = cartSnapshot.reduce(function(s,p){return s+p.price*p.qty;},0);
+  var env = selDelivery==="domicilio"?ENVIO_COSTO:0;
+  var pedido = {
+    folio:folio, estado:"nuevo",
+    clienteNombre:nombre, clienteTel:tel,
+    direccion:direccion||"", notas:notas||"",
+    items:cartSnapshot, subtotal:sub, envio:env, total:sub+env,
+    delivery:dLabel, fechaEntrega:fechaLabel||"Sin fecha",
+    pago:mL[currentMetodo]||currentMetodo, timestamp:Date.now()
+  };
+  try { if (typeof window._fbAddDoc==="function") await window._fbAddDoc(pedido); }
+  catch(e){ console.warn("Firebase:",e.message); }
+  folioGuardado = folio;
   go("exito");
 }
 
 /* ── EXITO ── */
 function renderExito() {
-  var folio="CHU-"+Math.floor(Math.random()*9000+1000);
-  document.getElementById("exitoFolio").textContent="Folio: "+folio;
+  var folio = folioGuardado||("CHU-"+Math.floor(Math.random()*9000+1000));
+  document.getElementById("exitoFolio").textContent = "Folio: "+folio;
   var ef=document.getElementById("exitoFecha");
   if (fechaLabel){ef.textContent="Entrega: "+fechaLabel;ef.style.display="block";}
   else ef.style.display="none";
+  var et=document.getElementById("exitoTitle");
+  if (et&&clienteNombreVal) et.textContent="¡Listo "+clienteNombreVal+"! Pedido enviado";
   waMsg=buildMsg(folio); cart={}; updateBadge();
 }
 function buildMsg(folio) {
@@ -749,7 +785,7 @@ function pedirPorWA() {
   if(!items.length){alert("Agrega productos primero.");return;}
   if(!selDelivery){alert("Selecciona c\u00F3mo quieres recibir.");return;}
   if(selDelivery==="domicilio"&&getSubtotal()<ENVIO_MINIMO){alert("M\u00EDnimo $"+ENVIO_MINIMO+" MXN para domicilio.");return;}
-  if(selDelivery==="programar"&&!fechaSeleccionada){alert("Selecciona una fecha.");return;}
+  if(!fechaSeleccionada){alert("Selecciona la fecha de entrega (mínimo 3 días).");return;}
   cartSnapshot=items.map(function(p){return {name:p.name,desc:p.desc,price:p.price,qty:cart[p.id]};});
   window.open("https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(buildMsg(null)),"_blank");
 }
@@ -757,6 +793,35 @@ function resetApp(){fechaSeleccionada="";fechaLabel="";selDelivery="";cartSnapsh
 
 renderProducts();
 
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// ══ PON AQUI TUS DATOS DE FIREBASE ════════════════════════════
+const firebaseConfig = {
+  apiKey:            "TU_API_KEY",
+  authDomain:        "TU_PROYECTO.firebaseapp.com",
+  projectId:         "TU_PROYECTO",
+  storageBucket:     "TU_PROYECTO.appspot.com",
+  messagingSenderId: "TU_MESSAGING_ID",
+  appId:             "TU_APP_ID"
+};
+// ══════════════════════════════════════════════════════════════
+
+try {
+  const fbApp = initializeApp(firebaseConfig, "chulina-client");
+  const db    = getFirestore(fbApp);
+  window._fbAddDoc = async function(pedido) {
+    pedido.timestamp = serverTimestamp();
+    await addDoc(collection(db, "pedidos"), pedido);
+  };
+  console.log("Firebase conectado ✅");
+} catch(e) {
+  console.warn("Firebase no configurado:", e.message);
+}
 </script>
 </body>
 </html>
