@@ -105,12 +105,12 @@ import { getFirestore, collection, onSnapshot, doc, updateDoc, query, orderBy }
 //  1. PON TUS DATOS DE FIREBASE AQUI
 // ════════════════════════════════════════════════════
 const firebaseConfig = {
-  apiKey:            "TU_API_KEY",
-  authDomain:        "TU_PROYECTO.firebaseapp.com",
-  projectId:         "TU_PROYECTO",
-  storageBucket:     "TU_PROYECTO.appspot.com",
-  messagingSenderId: "TU_MESSAGING_ID",
-  appId:             "TU_APP_ID"
+  apiKey:            "AIzaSyDnAVx99zf_huCCguQrpFNuE07UrCk8PrA",
+  authDomain:        "chulina-app.firebaseapp.com",
+  projectId:         "chulina-app",
+  storageBucket:     "chulina-app.firebasestorage.app",
+  messagingSenderId: "67580631803",
+  appId:             "1:67580631803:web:36cd6cce69cf333a2b6e5e"
 };
 
 // ════════════════════════════════════════════════════
@@ -118,8 +118,8 @@ const firebaseConfig = {
 //     Agrega el email de Chulina y el tuyo
 // ════════════════════════════════════════════════════
 const ADMIN_EMAILS = [
-  "chulina@gmail.com",
-  "solarlion@gmail.com"
+  "chulinatortillas@gmail.com",
+  "solarlionapps@gmail.com"
 ];
 // ════════════════════════════════════════════════════
 
@@ -139,7 +139,7 @@ window.toggleEmail = function() {
 };
 
 // Google login
-window.loginGoogle = async function() {
+window.loginGoogle = function() {
   setLoading(true);
   try {
     var result = await signInWithPopup(auth, provider);
@@ -301,7 +301,7 @@ function renderPedidos() {
 }
 
 // Change status
-window.cambiarEstado = async function(id, estado) {
+window.cambiarEstado = function(id, estado) {
   try {
     await updateDoc(doc(db,"pedidos",id), {estado:estado});
     showToast("Actualizado: " + estado);
