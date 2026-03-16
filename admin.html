@@ -129,7 +129,30 @@ const db       = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 let allPedidos = [], currentFilter = "todos", unsubscribe = null, lastCount = 0;
-
+  
+// Maneja el resultado de la redirección al cargar la página
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    // Usuario ya autenticado o acaba de volver de una redirección
+    const result = await getRedirectResult(auth); // Obtener el resultado si viene de un redirect
+    if (result && result.user) {
+      console.log("Usuario autenticado por redirección:", result.user);
+      // Aquí puedes añadir tu lógica post-login, por ejemplo, verificar si es admin
+      checkAdmin(result.user);
+      setLoading(false); // Asumiendo que setLoading existe y se debe ocultar
+    } else {
+      // Usuario ya estaba autenticado, o inició sesión con email/pass
+      console.log("Usuario ya autenticado:", user);
+      checkAdmin(user);
+      setLoading(false);
+    }
+  } else {
+    // No hay usuario logueado
+    console.log("No hay usuario logueado.");
+    setLoading(false);
+  }
+});
+  
 // Toggle email form
 window.toggleEmail = function() {
   var sec = document.getElementById("emailSec");
@@ -147,7 +170,7 @@ window.toggleEmail = function() {
 
   try {
 
-    const result = await signInWithPopup(auth, provider);
+    const result = await signInWithRedirect(auth, provider);
     console.log("Usuario:", result.user);
 
   } catch (error) {
