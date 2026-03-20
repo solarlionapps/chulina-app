@@ -2,10 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
   <meta name="theme-color" content="#5C3D8F"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
   <meta name="apple-mobile-web-app-title" content="Chulina Admin"/>
+  <link rel="manifest" href="admin-manifest.json"/>
+  <link rel="apple-touch-icon" href="icon-192.png"/>
   <title>Chulina - Panel Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
   <style>
@@ -128,8 +131,8 @@ const firebaseConfig = {
 //     Agrega el email de Chulina y el tuyo
 // ════════════════════════════════════════════════════
 const ADMIN_EMAILS = [
-  "chulinatortillas@gmail.com",
-  "solarlionapps@gmail.com"
+  "chulina@gmail.com",
+  "solarlion@gmail.com"
 ];
 // ════════════════════════════════════════════════════
 
@@ -453,6 +456,11 @@ function playBeep() {
     });
   } catch(e){}
 }
-</script>
+
+// Register service worker for PWA install
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/chulina-app/sw.js", {scope: "/chulina-app/"})
+    .catch(function(){});
+}</script>
 </body>
 </html>
