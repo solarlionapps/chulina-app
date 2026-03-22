@@ -167,7 +167,7 @@ body{font-family:'Nunito',sans-serif;background:#EDE8F5;min-height:100vh;}
 
 <div class="toast" id="toast"></div>
 
-<!-- Script 1: Global functions (accessible from onclick) -->
+<!-- Script 1: Funciones globales -->
 <script>
 
 // ── REGULAR SCRIPT — funciones globales accesibles desde onclick ──
@@ -204,6 +204,7 @@ function loginGoogle() {
   setLoading(true);
   window._auth.signInWithPopup(window._provider)
     .then(function(r) {
+      setLoading(false);
       if (!ADMIN_EMAILS.includes(r.user.email)) {
         window._auth.signOut(); setLoading(false);
         showErr("Acceso denegado. Email no autorizado.");
@@ -222,6 +223,7 @@ function loginEmail_fn() {
   if (!email||!pass) { showErr("Ingresa email y contrase\u00f1a"); return; }
   setLoading(true);
   window._auth.signInWithEmailAndPassword(email, pass)
+    .then(function() { setLoading(false); })
     .catch(function(e) { setLoading(false); showErr("Email o contrase\u00f1a incorrectos"); });
 }
 
@@ -289,7 +291,7 @@ if ("serviceWorker" in navigator) {
 
 </script>
 
-<!-- Script 2: Firebase module (exposes window._auth, window._db) -->
+<!-- Script 2: Firebase module -->
 <script type="module">
 
 import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -322,6 +324,7 @@ var allPedidos = [], lastCount = 0;
 
 // Auth state
 onAuthStateChanged(window._auth, function(user) {
+  if (typeof setLoading === "function") setLoading(false);
   if (user && ADMIN_EMAILS_M.includes(user.email)) {
     document.getElementById("loginWrap").style.display  = "none";
     document.getElementById("adminWrap").classList.add("show");
