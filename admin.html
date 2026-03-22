@@ -324,7 +324,7 @@ var allPedidos = [], lastCount = 0;
 
 // Auth state
 onAuthStateChanged(window._auth, function(user) {
-  if (typeof setLoading === "function") setLoading(false);
+  if (typeof window.setLoading === "function") window.setLoading(false);
   if (user && ADMIN_EMAILS_M.includes(user.email)) {
     document.getElementById("loginWrap").style.display  = "none";
     document.getElementById("adminWrap").classList.add("show");
@@ -344,13 +344,13 @@ function startListening() {
     allPedidos = [];
     snap.forEach(function(d){ allPedidos.push(Object.assign({id:d.id},d.data())); });
     if (allPedidos.length > lastCount && lastCount > 0) {
-      showNewAlert(); playBeep();
+      window.showNewAlert(); window.playBeep();
       var nv=allPedidos.filter(function(p){return p.estado==="nuevo";});
       if (nv.length>0) sendEmail(nv[0]);
     }
     lastCount = allPedidos.length;
     updateStats();
-    window._renderPedidos(window._currentFilter);
+    if (window._renderPedidos) window._renderPedidos(window._currentFilter);
   });
 }
 
@@ -424,8 +424,8 @@ window._renderPedidos = function(filter) {
 window._cambiarEstado = async function(id, estado) {
   try {
     await updateDoc(doc(window._db,"pedidos",id),{estado:estado});
-    showToast("Actualizado: "+estado+" \u2713");
-  } catch(e){ showToast("Error al actualizar"); }
+    window.showToast("Actualizado: "+estado+" \u2713");
+  } catch(e){ window.showToast("Error al actualizar"); }
 };
 
 window._loadMenuAdmin = async function() {
@@ -455,7 +455,7 @@ window._agregarProducto = async function() {
   var d2=document.getElementById("mDesc").value.trim();
   var pr=Number(document.getElementById("mPrecio").value);
   var nt=document.getElementById("mNota").value.trim();
-  if(!n||!pr){showToast("Pon nombre y precio");return;}
+  if(!n||!pr){window.showToast("Pon nombre y precio");return;}
   try {
     var prod={nombre:n,descripcion:d2,precio:pr,disponible:true};
     if(nt) prod.nota=nt;
@@ -464,20 +464,20 @@ window._agregarProducto = async function() {
     document.getElementById("mDesc").value="";
     document.getElementById("mPrecio").value="";
     document.getElementById("mNota").value="";
-    showToast("\u2713 Producto agregado");
+    window.showToast("\u2713 Producto agregado");
     window._loadMenuAdmin();
-  } catch(e){showToast("Error: "+e.message);}
+  } catch(e){window.showToast("Error: "+e.message);}
 };
 
 window._toggleDisp = async function(id, nuevo) {
   try { await updateDoc(doc(window._db,"menu",id),{disponible:nuevo}); window._loadMenuAdmin(); }
-  catch(e){showToast("Error");}
+  catch(e){window.showToast("Error");}
 };
 
 window._eliminarProd = async function(id) {
   if(!confirm("\u00bfEliminar?"))return;
-  try { await deleteDoc(doc(window._db,"menu",id)); showToast("Eliminado"); window._loadMenuAdmin(); }
-  catch(e){showToast("Error");}
+  try { await deleteDoc(doc(window._db,"menu",id)); window.showToast("Eliminado"); window._loadMenuAdmin(); }
+  catch(e){window.showToast("Error");}
 };
 
 function sendEmail(pedido) {
